@@ -136,12 +136,27 @@ def test_profit_bump(rate,
 
 def test_leverage(rate = 0.095,
                   reinvest_rate = 0.5,
-                  levels = [x / 2 for x in list(range(-1, 10))]):
+                  levels = [x / 2 for x in list(range(-1, 10))],
+                  profit_bump = 0.065):
     """Ugly function here but we're testing half-turn leverage multiples from 
     -0.5 (half the balance sheet in cash) to 5x"""
     for i in levels:
-        deciles(simulate(target_leverage = i))
+        print("Results at leverage of: " +str(i)+ "\n-----")
+        deciles(simulate(rate = rate,
+                         reinvest_rate = reinvest_rate,
+                         target_leverage = i,
+                         profit_bump = profit_bump))
 
-## TODO
-
-## Test varying rate, target leverage, reinvest rate
+def test_reinvest(rate = 0.095,
+                  reinvest_list = [x / 10 for x in range(0,10)],
+                  target_leverage = 2,
+                  profit_bump = 0.065):
+    """Another ugly function, same deal but testing reinvestment rates of 0% to 
+    90%. 100% will break the model because it only looks at the PV of dividends.
+    """
+    for i in reinvest_list:
+        print("Results for a reinvestment level of: " + str(i * 100) + "%\n----")
+        deciles(simulate(rate = rate,
+                         reinvest_rate = i,
+                         target_leverage = target_leverage,
+                         profit_bump = profit_bump))
